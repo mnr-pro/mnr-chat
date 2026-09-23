@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MNR PRO — AI Customer Support</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(34,197,94,.16), transparent 30%),
+    radial-gradient(circle at 90% 85%, rgba(16,185,129,.10), transparent 32%),
+    #030507;
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+}
+
+/* APP */
+.chat-container {
+  width: 100%;
+  max-width: 900px;
+  min-height: 88vh;
+  background: rgba(9,13,18,.94);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.65),
+    0 0 70px rgba(34,197,94,.06);
+  backdrop-filter: blur(25px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  padding: 20px 25px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: rgba(4,7,10,.88);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#39f27a,#0d9f4c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+  box-shadow: 0 10px 35px rgba(34,197,94,.25);
+}
+
+.brand h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: .5px;
+}
+
+.brand p {
+  margin: 4px 0 0;
+  color: #7f8a96;
+  font-size: 12px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a7b0b9;
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 14px #22c55e;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 52px 25px 35px;
+  background:
+    radial-gradient(circle at center, rgba(34,197,94,.09), transparent 55%);
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 30px;
+  background: rgba(34,197,94,.08);
+  border: 1px solid rgba(34,197,94,.18);
+  color: #67e890;
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.hero h1 span {
+  color: #39df72;
+}
+
+.hero p {
+  max-width: 620px;
+  margin: 15px auto 0;
+  color: #8d98a4;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.demo-title {
+  text-align: center;
+  margin: 5px 0 18px;
+  color: #d8dee5;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* CHAT */
+.chat {
+  flex: 1;
+  padding: 0 25px 25px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.message {
+  max-width: 75%;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  border-radius: 18px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  font-size: 14px;
+  animation: appear .2s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user {
+  background: linear-gradient(135deg,#24d866,#119b49);
+  color: white;
+  margin-right: auto;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 8px 25px rgba(34,197,94,.13);
+}
+
+.bot {
+  background: #151b22;
+  color: #edf2f5;
+  margin-left: auto;
+  border-bottom-left-radius: 5px;
+  border: 1px solid rgba(255,255,255,.07);
+}
+
+/* INPUT */
+.input-area {
+  padding: 18px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  background: rgba(4,7,10,.94);
+  display: flex;
+  gap: 10px;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 16px 18px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 17px;
+  outline: none;
+  background: #10161d;
+  color: white;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.input-area input::placeholder {
+  color: #68727d;
+}
+
+.input-area input:focus {
+  border-color: rgba(34,197,94,.55);
+  box-shadow: 0 0 0 3px rgba(34,197,94,.07);
+}
+
+button {
+  border: none;
+  min-width: 105px;
+  padding: 0 22px;
+  border-radius: 17px;
+  background: linear-gradient(135deg,#35e976,#109b49);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 10px 28px rgba(34,197,94,.18);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(34,197,94,.28);
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+  }
+
+  .chat-container {
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .header {
+    padding: 17px;
+  }
+
+  .hero {
+    padding: 40px 18px 28px;
+  }
+
+  .hero h1 {
+    font-size: 29px;
+  }
+
+  .hero p {
+    font-size: 13px;
+  }
+
+  .chat {
+    padding: 0 17px 20px;
+  }
+
+  .message {
+    max-width: 88%;
+  }
+
+  .input-area {
+    padding: 12px;
+  }
+
+  button {
+    min-width: 82px;
+    padding: 0 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+  <div class="header">
+
+    <div class="brand">
+
+      <div class="logo">
+        🤖
+      </div>
+
+      <div>
+        <h2>MNR PRO AI</h2>
+        <p>AI Customer Support</p>
+      </div>
+
+    </div>
+
+    <div class="status">
+      <span class="status-dot"></span>
+      AI Online
+    </div>
+
+  </div>
+
+
+  <div class="hero">
+
+    <div class="hero-badge">
+      ✨ AI CUSTOMER SUPPORT
+    </div>
+
+    <h1>
+      حوّل خدمة العملاء ديالك<br>
+      إلى <span>تجربة ذكية.</span>
+    </h1>
+
+    <p>
+      مساعد AI كيرد على الزبناء بسرعة، بالدارجة والعربية والفرنسية،
+      وعلى مدار الساعة.
+    </p>
+
+  </div>
+
+
+  <div class="demo-title">
+    جرّب المساعد الذكي 👇
+  </div>
+
+
+  <div class="chat" id="chat">
+
+    <div class="message bot">
+      وعليكم السلام! مرحبًا ف MNR PRO 👋
+      كيفاش نقدر نعاونك اليوم؟
+    </div>
+
+  </div>
+
+
+  <div class="input-area">
+
+    <input
+      id="message"
+      type="text"
+      placeholder="كتب رسالتك هنا..."
+      onkeydown="if(event.key === 'Enter') sendMessage()"
+    >
+
+    <button
+      id="sendButton"
+      onclick="sendMessage()"
+    >
+      إرسال
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+async function sendMessage() {
+
+  const input = document.getElementById("message");
+  const button = document.getElementById("sendButton");
+  const chat = document.getElementById("chat");
+
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  chat.innerHTML +=
+    '<div class="message user">' +
+    message +
+    '</div>';
+
+  input.value = "";
+
+  button.disabled = true;
+  button.innerText = "جاري...";
+
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+
+    const response = await fetch(
+      "https://mnr-pro.app.n8n.cloud/webhook/2c76e790-e172-4687-a45e-5f8a0d6c0fd5",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          message: message
+        })
+      }
+    );
+
+    const data = await response.text();
+
+    chat.innerHTML +=
+      '<div class="message bot">' +
+      data +
+      '</div>';
+
+  } catch (error) {
+
+    chat.innerHTML +=
+      '<div class="message bot">' +
+      'وقع مشكل فالاتصال. حاول مرة أخرى.' +
+      '</div>';
+
+  }
+
+  button.disabled = false;
+  button.innerText = "إرسال";
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+</script>
+
+</body>
+</html>
