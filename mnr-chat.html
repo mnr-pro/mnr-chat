@@ -378,6 +378,9 @@ button:disabled {
 
 <script>
 
+const sessionId = localStorage.getItem("mnrSessionId") || crypto.randomUUID();
+localStorage.setItem("mnrSessionId", sessionId);
+
 async function sendMessage() {
 
   const input = document.getElementById("message");
@@ -411,9 +414,10 @@ async function sendMessage() {
           "Content-Type": "application/json"
         },
 
-        body: JSON.stringify({
-          message: message
-        })
+       body: JSON.stringify({
+  message: message,
+  sessionId: sessionId
+})
       }
     );
 
