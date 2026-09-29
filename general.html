@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MNR PRO — AI Customer Support</title>
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#030507;
+color:white;
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:900px;
+height:90vh;
+background:#0a0f14;
+border:1px solid #1d2923;
+border-radius:25px;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+box-shadow:0 20px 70px rgba(0,0,0,.6);
+}
+
+/* HEADER */
+
+.header{
+padding:18px 24px;
+background:#070b0f;
+border-bottom:1px solid #18201c;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logo{
+width:48px;
+height:48px;
+border-radius:14px;
+background:#20c463;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+}
+
+.brand h2{
+margin:0;
+font-size:20px;
+}
+
+.brand p{
+margin:4px 0 0;
+font-size:12px;
+color:#78847d;
+}
+
+.online{
+font-size:12px;
+color:#65e891;
+}
+
+/* HERO */
+
+.hero{
+text-align:center;
+padding:40px 20px 22px;
+}
+
+.badge{
+display:inline-block;
+padding:8px 15px;
+border-radius:20px;
+background:#10271a;
+color:#62e88c;
+font-size:12px;
+margin-bottom:18px;
+}
+
+.hero h1{
+margin:0;
+font-size:38px;
+line-height:1.3;
+}
+
+.hero h1 span{
+color:#35df72;
+}
+
+.hero p{
+color:#8b9690;
+font-size:15px;
+line-height:1.8;
+max-width:680px;
+margin:15px auto;
+}
+
+/* CHAT */
+
+.chat{
+flex:1;
+overflow-y:auto;
+padding:20px 25px;
+}
+
+.message{
+max-width:75%;
+padding:13px 17px;
+margin-bottom:13px;
+border-radius:17px;
+line-height:1.7;
+font-size:14px;
+white-space:pre-wrap;
+}
+
+.bot{
+background:#151c20;
+border:1px solid #202b26;
+margin-left:auto;
+}
+
+.user{
+background:#20bd5d;
+margin-right:auto;
+}
+
+/* INPUT */
+
+.input{
+padding:16px;
+background:#070b0f;
+border-top:1px solid #18201c;
+display:flex;
+gap:10px;
+}
+
+.input input{
+flex:1;
+background:#10161a;
+border:1px solid #25302a;
+color:white;
+border-radius:15px;
+padding:15px;
+outline:none;
+font-size:14px;
+}
+
+.input input:focus{
+border-color:#20bd5d;
+}
+
+.input button{
+border:0;
+border-radius:15px;
+padding:0 25px;
+background:#20c463;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.input button:disabled{
+opacity:.5;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.container{
+height:100vh;
+border-radius:0;
+}
+
+body{
+padding:0;
+}
+
+.hero h1{
+font-size:28px;
+}
+
+.message{
+max-width:88%;
+}
+
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="brand">
+
+<div class="logo">
+🤖
+</div>
+
+<div>
+
+<h2>MNR PRO AI</h2>
+
+<p>
+AI Customer Support & Automation
+</p>
+
+</div>
+
+</div>
+
+<div class="online">
+● AI Online
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<div class="hero">
+
+<div class="badge">
+🌍 AI CUSTOMER SUPPORT
+</div>
+
+<h1>
+
+مساعدك الذكي<br>
+
+<span>لخدمة الزبناء 24/7</span>
+
+</h1>
+
+<p>
+
+AI Customer Support — Multilingual 🌍<br>
+
+مساعد ذكي كيرد على الزبناء، كيساعدهم فطلباتـهم، وكيجمع المعلومات وينظم التواصل أوتوماتيكياً.
+
+</p>
+
+</div>
+
+
+<!-- CHAT -->
+
+<div class="chat" id="chat">
+
+<div class="message bot">
+
+السلام عليكم 👋
+
+مرحبا بك عند MNR PRO.
+
+أنا AI Customer Support Assistant 🤖
+
+كيفاش نقدر نعاونك اليوم؟
+
+</div>
+
+</div>
+
+
+<!-- INPUT -->
+
+<div class="input">
+
+<input
+id="message"
+type="text"
+placeholder="كتب رسالتك هنا..."
+>
+
+<button id="send">
+إرسال
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* N8N WEBHOOK */
+
+const webhook =
+"https://mnr-pro.app.n8n.cloud/webhook/2c76e790-e172-4687-a45e-5f8a0d6c0fd5";
+
+
+/* SESSION ID */
+
+let sessionId =
+localStorage.getItem("mnrGeneralSessionId");
+
+if(!sessionId){
+
+sessionId =
+crypto.randomUUID();
+
+localStorage.setItem(
+"mnrGeneralSessionId",
+sessionId
+);
+
+}
+
+
+/* ELEMENTS */
+
+const input =
+document.getElementById("message");
+
+const button =
+document.getElementById("send");
+
+const chat =
+document.getElementById("chat");
+
+
+/* ADD MESSAGE */
+
+function addMessage(text,type){
+
+const div =
+document.createElement("div");
+
+div.className =
+"message " + type;
+
+div.textContent =
+text;
+
+chat.appendChild(div);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+
+/* SEND MESSAGE */
+
+async function sendMessage(){
+
+const message =
+input.value.trim();
+
+if(!message) return;
+
+addMessage(
+message,
+"user"
+);
+
+input.value="";
+
+button.disabled=true;
+
+button.textContent="جاري...";
+
+
+try{
+
+const response =
+await fetch(webhook,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+message:message,
+
+sessionId:sessionId
+
+})
+
+});
+
+const result =
+await response.text();
+
+addMessage(
+
+result ||
+
+"ما وصلني حتى جواب.",
+
+"bot"
+
+);
+
+}catch(error){
+
+addMessage(
+
+"وقع مشكل فالاتصال. حاول مرة أخرى.",
+
+"bot"
+
+);
+
+}
+
+button.disabled=false;
+
+button.textContent="إرسال";
+
+input.focus();
+
+}
+
+
+/* BUTTON */
+
+button.addEventListener(
+"click",
+sendMessage
+);
+
+
+/* ENTER */
+
+input.addEventListener(
+"keydown",
+function(event){
+
+if(event.key==="Enter"){
+
+sendMessage();
+
+}
+
+}
+);
+
+</script>
+
+</body>
+
+</html>
