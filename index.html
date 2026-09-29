@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MNR PRO — AI Customer Support</title>
+
+<title>MNR PRO — AI Car Rental Assistant</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
@@ -32,6 +39,8 @@ display:flex;
 flex-direction:column;
 box-shadow:0 20px 70px rgba(0,0,0,.6);
 }
+
+/* HEADER */
 
 .header{
 padding:18px 24px;
@@ -75,9 +84,11 @@ font-size:12px;
 color:#65e891;
 }
 
+/* HERO */
+
 .hero{
 text-align:center;
-padding:45px 20px 25px;
+padding:40px 20px 22px;
 }
 
 .badge{
@@ -104,9 +115,11 @@ color:#35df72;
 color:#8b9690;
 font-size:15px;
 line-height:1.8;
-max-width:600px;
+max-width:650px;
 margin:15px auto;
 }
+
+/* CHAT */
 
 .chat{
 flex:1;
@@ -134,6 +147,8 @@ margin-left:auto;
 background:#20bd5d;
 margin-right:auto;
 }
+
+/* INPUT */
 
 .input{
 padding:16px;
@@ -172,7 +187,10 @@ cursor:pointer;
 opacity:.5;
 }
 
+/* MOBILE */
+
 @media(max-width:600px){
+
 .container{
 height:100vh;
 border-radius:0;
@@ -189,23 +207,35 @@ font-size:28px;
 .message{
 max-width:88%;
 }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
+<!-- HEADER -->
+
 <div class="header">
 
 <div class="brand">
 
-<div class="logo">🤖</div>
+<div class="logo">
+🤖
+</div>
 
 <div>
+
 <h2>MNR PRO AI</h2>
-<p>AI Customer Support</p>
+
+<p>
+AI Car Rental Assistant
+</p>
+
 </div>
 
 </div>
@@ -216,33 +246,54 @@ max-width:88%;
 
 </div>
 
+
+<!-- HERO -->
+
 <div class="hero">
 
 <div class="badge">
-✨ AI CUSTOMER SUPPORT
+🚗 AI CAR RENTAL ASSISTANT
 </div>
 
 <h1>
-خدمة العملاء ديالك<br>
-بشكل <span>ذكي وسريع.</span>
+
+مساعدك الذكي<br>
+
+<span>لكراء السيارات 24/7</span>
+
 </h1>
 
 <p>
-مساعد AI كيرد على الزبناء بالدارجة والعربية والفرنسية،
-24/7 وبسرعة.
+
+AI Customer Support — All Languages 🌍<br>
+
+مساعد ذكي كيتواصل مع الزبناء بسرعة وكيعاونهم فاختيار وحجز السيارة.
+
 </p>
 
 </div>
 
+
+<!-- CHAT -->
+
 <div class="chat" id="chat">
 
 <div class="message bot">
+
 وعليكم السلام! 👋
+
 مرحبا بك عند MNR PRO.
+
+أنا AI Car Rental Assistant 🤖🚗
+
 كيفاش نقدر نعاونك اليوم؟
+
 </div>
 
 </div>
+
+
+<!-- INPUT -->
 
 <div class="input">
 
@@ -260,10 +311,16 @@ placeholder="كتب رسالتك هنا..."
 
 </div>
 
+
 <script>
+
+/* N8N WEBHOOK */
 
 const webhook =
 "https://mnr-pro.app.n8n.cloud/webhook/2c76e790-e172-4687-a45e-5f8a0d6c0fd5";
+
+
+/* SESSION ID */
 
 let sessionId =
 localStorage.getItem("mnrSessionId");
@@ -280,6 +337,9 @@ sessionId
 
 }
 
+
+/* ELEMENTS */
+
 const input =
 document.getElementById("message");
 
@@ -288,6 +348,9 @@ document.getElementById("send");
 
 const chat =
 document.getElementById("chat");
+
+
+/* ADD MESSAGE */
 
 function addMessage(text,type){
 
@@ -307,6 +370,9 @@ chat.scrollHeight;
 
 }
 
+
+/* SEND MESSAGE */
+
 async function sendMessage(){
 
 const message =
@@ -314,13 +380,20 @@ input.value.trim();
 
 if(!message) return;
 
-addMessage(message,"user");
+
+/* USER MESSAGE */
+
+addMessage(
+message,
+"user"
+);
 
 input.value="";
 
 button.disabled=true;
 
 button.textContent="جاري...";
+
 
 try{
 
@@ -330,7 +403,8 @@ await fetch(webhook,{
 method:"POST",
 
 headers:{
-"Content-Type":"application/json"
+"Content-Type":
+"application/json"
 },
 
 body:JSON.stringify({
@@ -343,22 +417,38 @@ sessionId:sessionId
 
 });
 
+
 const result =
 await response.text();
 
+
+/* AI RESPONSE */
+
 addMessage(
-result || "ما وصلني حتى جواب.",
+
+result ||
+
+"ما وصلني حتى جواب.",
+
 "bot"
+
 );
+
 
 }catch(error){
 
 addMessage(
+
 "وقع مشكل فالاتصال. حاول مرة أخرى.",
+
 "bot"
+
 );
 
 }
+
+
+/* ENABLE BUTTON */
 
 button.disabled=false;
 
@@ -368,10 +458,16 @@ input.focus();
 
 }
 
+
+/* BUTTON */
+
 button.addEventListener(
 "click",
 sendMessage
 );
+
+
+/* ENTER */
 
 input.addEventListener(
 "keydown",
@@ -389,4 +485,5 @@ sendMessage();
 </script>
 
 </body>
+
 </html>
