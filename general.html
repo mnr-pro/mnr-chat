@@ -297,6 +297,7 @@ AI Customer Support — Multilingual 🌍<br>
 id="message"
 type="text"
 placeholder="كتب رسالتك هنا..."
+autocomplete="off"
 >
 
 <button id="send">
@@ -310,11 +311,11 @@ placeholder="كتب رسالتك هنا..."
 
 <script>
 
-/* N8N WEBHOOK */
+/* N8N GENERAL WEBHOOK */
 
 const webhook =
+"https://mnr-pro.app.n8n.cloud/webhook/mnr-general-ai";
 
-https://mnr-pro.app.n8n.cloud/webhook/mnr-general-ai
 
 /* SESSION ID */
 
@@ -376,16 +377,18 @@ input.value.trim();
 
 if(!message) return;
 
+
+/* USER MESSAGE */
+
 addMessage(
 message,
 "user"
 );
 
-input.value="";
+input.value = "";
 
-button.disabled=true;
-
-button.textContent="جاري...";
+button.disabled = true;
+button.textContent = "جاري...";
 
 
 try{
@@ -409,8 +412,17 @@ sessionId:sessionId
 
 });
 
+
+if(!response.ok){
+throw new Error("HTTP " + response.status);
+}
+
+
 const result =
 await response.text();
+
+
+/* AI RESPONSE */
 
 addMessage(
 
@@ -422,7 +434,10 @@ result ||
 
 );
 
+
 }catch(error){
+
+console.error(error);
 
 addMessage(
 
@@ -434,9 +449,11 @@ addMessage(
 
 }
 
-button.disabled=false;
 
-button.textContent="إرسال";
+/* ENABLE BUTTON */
+
+button.disabled = false;
+button.textContent = "إرسال";
 
 input.focus();
 
@@ -453,14 +470,22 @@ sendMessage
 
 /* ENTER */
 
-input.addEventListener("keydown", function(event){
+input.addEventListener(
+"keydown",
+function(event){
 
-  if(event.key === "Enter"){
-    event.preventDefault();
-    sendMessage();
-  }
+if(event.key === "Enter"){
 
-});
+event.preventDefault();
+
+sendMessage();
+
+}
+
+}
+);
+
+</script>
 
 </body>
 
